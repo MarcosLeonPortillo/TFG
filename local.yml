@@ -17,7 +17,7 @@ services:
       - tfg_postgres_data:/var/lib/postgresql/data
       - tfg_data_backups:/backups
     ports:
-      - 5432:5432
+      - 5435:5432
 
 volumes:
   tfg_postgres_data:
