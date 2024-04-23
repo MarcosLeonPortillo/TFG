@@ -1,0 +1,36 @@
+.page-header {
+    background-color: #165E13;
+    color: white;
+    width: 100%;
+
+    margin: 0;
+    padding: 0;
+}
+
+.page-header img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+
+
+.container-fluid {
+    padding-right: 0;
+    padding-left: 0;
+    margin-right: auto;
+    margin-left: auto;
+    width: 100%;
+}
+
+body{
+    background-color: #ddffdd;
+}
+
+a{
+    text-decoration: none;
+}
+
+img{
+    object-fit: contain;
+}

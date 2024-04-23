@@ -1,0 +1,75 @@
+{% extends 'LeonGames/base.html' %}
+{% block content %}
+    <div class="container text-center">
+        <br>
+        <h2>Inicia sesión</h2> <br>
+        <form method="post">
+            {% csrf_token %}
+
+            {{ form.username.label_tag }}
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="text-danger">
+                    {{ form.username.errors.as_text }}
+                </div>
+            {% endif %}
+            <br><br>
+
+            {{ form.password.label_tag }}
+            {{ form.password }}
+            {% if form.password.errors %}
+                <div class="text-danger">
+                    {{ form.password.errors.as_text }}
+                </div>
+            {% endif %}
+            <br><br>
+
+            {{ form.email.label_tag }}
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="text-danger">
+                    {{ form.email.errors.as_text }}
+                </div>
+            {% endif %}
+            <br><br>
+
+            {{ form.password1.label_tag }}
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                <div class="text-danger">
+                    {{ form.password1.errors.as_text }}
+                </div>
+            {% endif %}
+
+
+            {{ form.password2.label_tag }}
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                <div class="text-danger">
+                         {{ form.password2.errors.as_text }}
+                </div>
+            {% endif %}
+            <br><br>
+
+            {{ form.first_name.label_tag }}
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+                <div class="text-danger">
+                    {{ form.first_name.errors.as_text }}
+                </div>
+            {% endif %}
+            <br><br>
+
+            {{ form.last_name.label_tag }}
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+                <div class="text-danger">
+                    {{ form.last_name.errors.as_text }}
+                </div>
+            {% endif %}
+            <br><br>
+
+            <button type="submit" class="btn btn-primary">Confirmar</button>
+        </form>
+    </div>
+{% endblock %}

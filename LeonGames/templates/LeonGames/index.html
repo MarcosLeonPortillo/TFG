@@ -1,38 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'LeonGames/base.html' %}
+{% block content %}{% load static %}
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenida</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <!-- Custom CSS -->
     <style>
-        body {
-            background-color: #f8f9fa;
-        }
         .jumbotron {
-            background-color: #007bff;
-            color: #fff;
+            padding: 0;
+        }
+
+        .jumbotron img {
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+        }
+           .footer {
+            background-color: #165E13;
+            color: white;
+            padding: 20px 0;
         }
     </style>
 </head>
 <body>
-
 <div class="jumbotron text-center">
-    <h1 class="display-4">¡Bienvenido a LeonGames!</h1>
-    <p class="lead">La mejor página de compra y venta de videojuegos.</p>
-    <hr class="my-4">
-    <p>Puedes comenzar por...</p>
-    <a class="btn btn-primary btn-lg" href="#" role="button">Explorar</a>
+    <img src="{% static 'img/banner.avif' %}" alt="Banner">
 </div>
+<br>
 
-<!-- jQuery y Bootstrap JS (colocados al final del body para una carga más rápida) -->
+    <div class="container text-center principal mt-4">
+        <div class="row justify-content-center">
+
+            <div class="col-md-6">
+                 <form class="form-inline" method="GET">
+                {{ form.as_p }}
+                <br><button type="submit" class="btn btn-warning ml-2">Buscar</button>
+            </form>
+            </div>
+        </div>
+        <hr class="mt-3" style="border: 3px solid #165E13;">
+
+        <div class="row">
+            {% for juego in juegos %}
+                <div class="col-md-4 mb-4">
+                    <div class="card" style="border: 2px solid black; border-radius: 10px">
+                         <br>
+                    {% if juego.Marca == 'Sony' %}
+                        <img src="{% static 'img/sony.png' %}" alt="MarcaJuego" class="card-img-top img-fluid">
+                    {% elif juego.Marca == 'Nintendo' %}
+                        <img src="{% static 'img/nintendo.png' %}" alt="MarcaJuego" class="card-img-top img-fluid">
+                    {% elif juego.Marca == 'Microsoft' %}
+                        <img src="{% static 'img/microsoft.png' %}" alt="MarcaJuego" class="card-img-top img-fluid">
+                    {% else %}
+                        <img src="{% static 'img/caratula.png' %}" alt="MarcaJuego" class="card-img-top img-fluid">
+                    {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title"> {{ juego.Titulo }}</h5>
+                            <p class="card-text">
+                                <p>{{ juego.Marca }} </p>  <br>
+                            </p>
+                          <!--  <a href=" pk=producto.pk %}" class="btn btn-primary">
+                                Detalles
+                            </a>-->
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+<footer class="footer text-center mt-4">
+    <div class="container">
+        <p>© 2024 LeonGames. Todos los derechos reservados.</p>
+        <p>Desarrollado por Marcos León Portillo</p>
+    </div>
+</footer>
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
-</html>
+{% endblock %}

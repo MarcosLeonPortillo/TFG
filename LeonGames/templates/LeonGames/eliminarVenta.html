@@ -1,0 +1,14 @@
+{% extends 'LeonGames/base.html' %}
+
+{% block content %}
+  <h1>Eliminar Venta</h1>
+  <p>¿Estás seguro de que quieres eliminar esta venta?</p>
+  <p><strong>Título:</strong> {{ object.Juego.Titulo }}</p>
+  <p><strong>Descripción:</strong> {{ object.DescripcionVenta }}</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" name="confirmar" class="btn btn-danger">Sí, eliminar</button>
+    <a href="{% url 'ventas' %}" class="btn btn-secondary">No, cancelar</a>
+  </form>
+{% endblock %}

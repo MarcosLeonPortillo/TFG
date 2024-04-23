@@ -1,0 +1,9 @@
+{% extends 'LeonGames/base.html' %}
+    {% block content %}
+    <h1>Añadir Juego </h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Guardar producto</button>
+    </form>
+    {% endblock %}

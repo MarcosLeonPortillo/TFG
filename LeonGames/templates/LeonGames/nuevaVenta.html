@@ -1,0 +1,15 @@
+{% extends 'LeonGames/base.html' %}
+{% block content %}
+    <h1>Poner Videojuego en Venta</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_div }}
+        <br>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </form>
+
+
+     <div>  <a href="{% url 'welcome' %}" class="btn btn-secondary">Volver</a>
+     </div>
+{% endblock %}
