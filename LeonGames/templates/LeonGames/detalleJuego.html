@@ -1,0 +1,127 @@
+{% extends 'LeonGames/base.html' %}
+{% load static %}
+
+{% block content %}
+    <br><br>
+<div style="display: flex; justify-content: space-between; margin: 20px; margin-left: 5%; margin-right: 5%;">
+  <!-- Imagen a la izquierda -->
+  <div style="width: 45%;">
+    {% if juego.Marca == 'Sony' %}
+    <img src="{% static 'img/sony.png' %}" alt="MarcaJuego" class="card-img-top img-fluid">
+    {% elif juego.Marca == 'Nintendo' %}
+    <img src="{% static 'img/nintendo.png' %}" alt="MarcaJuego" class="card-img-top img-fluid">
+    {% elif juego.Marca == 'Microsoft' %}
+    <img src="{% static 'img/microsoft.png' %}" alt="MarcaJuego" class="card-img-top img-fluid">
+    {% else %}
+    <img src="{% static 'img/caratula.png' %}" alt="MarcaJuego" class="card-img-top img-fluid">
+    {% endif %}
+    <!-- Detalles debajo de la imagen -->
+    <div style="margin-top: 20px;">
+      <h2>{{ juego.Titulo }}</h2>
+      <p><strong>Género:</strong> {{ juego.Genero }}</p>
+      <p><strong>Descripción:</strong> {{ juego.DescripcionJuego }}</p>
+      <p><strong>Desarrollador:</strong> {{ juego.Desarrollador }}</p>
+      <p><strong>Lanzamiento:</strong> {{ juego.Lanzamiento }}</p>
+      <p><strong>Marca:</strong> {{ juego.Marca }}</p>
+    </div>
+  </div>
+
+  <!-- Párrafo de la gráfica a la derecha -->
+  {% if precio_medio_ventas %}
+  <div style="width: 50%;">
+    <div style="margin: 20px; margin-left: 5%; margin-right: 5%;">
+      <h3>Precio Medio de las Ventas</h3>
+      <canvas id="precioMedioVentasChart" width="400" height="200"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      // Obtén el contexto del canvas
+      var ctx = document.getElementById('precioMedioVentasChart').getContext('2d');
+
+      // Datos para la gráfica (ejemplo)
+      var data = {
+        labels: ['Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
+        datasets: [{
+          label: 'Precio Medio de Ventas',
+          data: [50, 60, 70, 65, 55], // Reemplaza estos datos con tus propios datos
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1
+        }]
+      };
+
+      // Configuración de la gráfica
+      var options = {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      };
+
+      // Crea la gráfica
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: options
+      });
+    </script>
+  </div>
+  {% endif %}
+</div>
+
+<div style="margin: 20px; margin-left: 5%; margin-right: 5%;">
+  <h3>Ventas</h3>
+  {% if ventas_relacionadas %}
+    <ul>
+      {% for venta in ventas_relacionadas %}
+        {% if venta.Vendedor != request.user %}
+          <li>Venta ID: {{ venta.id }}, Vendedor: {{ venta.Vendedor.username }}, Precio: {{ venta.Precio }}</li>
+          <a href="{% url 'comprarVenta' venta.id %}" class="btn btn-warning">Comprar</a>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Este videojuego no está puesto en venta.</p>
+  {% endif %}
+</div>
+
+<!-- Sección de comentarios -->
+<div style="margin: 20px; margin-left: 5%; margin-right: 5%;">
+  <h3>Comentarios</h3>
+  {% if comentarios %}
+    <ul>
+      {% for comentario in comentarios %}
+        <li>
+          <p><strong>Usuario:</strong> {{ comentario.Usuario.username }}</p>
+          <p><strong>Texto:</strong> {{ comentario.Texto }}</p>
+          <p><strong>Valoración:</strong> {{ comentario.get_valoracion }}</p>
+          <p><strong>Fecha:</strong> {{ comentario.Fecha }}</p>
+        </li>
+          {% if comentario.Usuario == request.user %}
+              <a href="{% url 'editarComentario' comentario.pk %}" class="btn btn-primary">Editar Comentario</a>
+              <a href="{% url 'eliminarComentario' comentario.pk %}" class="btn btn-danger">Eliminar Comentario</a>
+{% endif %}
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No hay comentarios para este juego.</p>
+  {% endif %}
+</div>
+
+{% if pedido_realizado %}
+  {% if comentario_realizado %}
+    <div style="margin: 20px; margin-left: 5%; margin-right: 5%;">
+      <p>Ya has comentado este juego</p>
+    </div>
+  {% else %}
+    <div style="margin: 20px; margin-left: 5%; margin-right: 5%;">
+      <a href="{% url 'crearComentario' juego.pk %}" class="btn btn-primary">Crear Comentario</a>
+    </div>
+  {% endif %}
+{% else %}
+  <div style="margin: 20px; margin-left: 5%; margin-right: 5%;">
+    <p>Para comentar y valorar un juego, debes de haber hecho un pedido de este</p>
+  </div>
+{% endif %}
+{% endblock %}

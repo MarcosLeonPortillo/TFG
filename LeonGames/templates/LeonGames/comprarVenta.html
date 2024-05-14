@@ -1,0 +1,31 @@
+{% extends 'LeonGames/base.html' %}
+<br><br>
+{% block content %}
+    <br><br>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Comprar Venta</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Detalles de la venta -->
+                    <div class="mb-3">
+                        <p class="fw-bold">Juego: {{ venta.juego }}</p>
+                        <p class="fw-bold">Precio: {{ venta.precio }}</p>
+                        <!-- Agrega más detalles si lo deseas -->
+                    </div>
+
+                    <!-- Formulario de compra -->
+                    <form method="post">
+                        {% csrf_token %}
+                        <!-- Puedes agregar campos adicionales aquí si es necesario -->
+                        <button type="submit" class="btn btn-primary">Comprar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

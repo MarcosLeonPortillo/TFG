@@ -65,8 +65,8 @@ class Comentarios_juegos(models.Model):
                                      null=True)
 
     def get_valoracion(self):
-        if self.valoracion:
-            return '⭐' * self.valoracion
+        if self.Valoracion:
+            return '⭐' * self.Valoracion
         else:
             return 'Sin valoración'
 
@@ -87,9 +87,11 @@ class Pedido(models.Model):
     Comprador = models.ForeignKey(User, related_name='comprador_pedidos', on_delete=models.CASCADE)
     Vendedor = models.ForeignKey(User, related_name='vendedor_pedidos', on_delete=models.CASCADE)
     Juego = models.ForeignKey(Juego, on_delete=models.CASCADE)
+    Venta = models.ForeignKey(Venta, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return f"Pedido ID: {self.id}"
+
 
 class Pedido_juego(models.Model):
     Cantidad = models.IntegerField()

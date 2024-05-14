@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import (WelcomeView, JuegosView, AñadirJuegoView, EditarJuegoView,
 EliminarJuegoView, RegistroView, LogInView, LogOutView, CrearVenta, VentasView, EditarVentaView,
-EliminarVentaView)
+EliminarVentaView, PerfilUsuarioView, EditarPerfilView, DetalleJuegoView, ComprarVentaView,
+CrearComentarioView, EditarComentarioView, EliminarComentarioView)
 from django.contrib import admin
 
 #Ponemos la urls que llevan los datos al template
@@ -19,4 +20,11 @@ path('ventas/', VentasView.as_view(), name='ventas'),
 path('ventas/crearVenta/', CrearVenta.as_view(), name='crearVenta'),
 path('ventas/editarVenta/<int:pk>/', EditarVentaView.as_view(), name='editarVenta'),
 path('ventas/eliminarVenta/<int:pk>/', EliminarVentaView.as_view(), name='eliminarVenta'),
+path('perfil/', PerfilUsuarioView.as_view(), name='perfil'),
+path('perfil/editarPerfil', EditarPerfilView.as_view(), name='editarPerfil'),
+path('detalleJuego/<int:pk>/', DetalleJuegoView.as_view(), name='detalleJuego'),
+path('detalleJuego/comprar_venta/<int:venta_id>/', ComprarVentaView.as_view(), name='comprarVenta'),
+path('detalleJuego/crearComentario/<int:pk>', CrearComentarioView.as_view(), name='crearComentario'),
+path('detalleJuego/editarComentario/<int:pk>/', EditarComentarioView.as_view(), name='editarComentario'),
+path('detalleJuego/eliminarComentario/<int:pk>/', EliminarComentarioView.as_view(), name='eliminarComentario'),
 ]

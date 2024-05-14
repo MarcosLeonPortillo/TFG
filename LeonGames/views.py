@@ -18,7 +18,8 @@ from django.forms import formset_factory
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from .models import Venta, Marca, Juego, Comentarios_juegos, Pedido, Pedido_juego
-from .forms import (FormJuego, FormRegistro, FormBuscarJuego, FormVenta)
+from .forms import (FormJuego, FormRegistro, FormBuscarJuego, FormVenta, EditarPerfilForm,
+PedidoForm, ComentarioForm)
 
 #Página de bienvenida
 class WelcomeView(ListView):
@@ -154,6 +155,10 @@ class VentasView(LoginRequiredMixin, ListView):
     context_object_name = 'ventas'
     login_url = '/logIn/'
 
+    def get_queryset(self):
+        # Filtrar las ventas del usuario logeado
+        return Venta.objects.filter(Vendedor=self.request.user)
+
 
 class CrearVenta(LoginRequiredMixin, CreateView):
     model = Venta
@@ -196,5 +201,152 @@ class EliminarVentaView(LoginRequiredMixin, DeleteView):
         return super().get_queryset().filter(Vendedor=self.request.user)
 
 
+class PerfilUsuarioView(LoginRequiredMixin, DetailView):
+    model = User
+    template_name = 'LeonGames/perfil.html'
 
 
+    def get_object(self, queryset=None):
+        return self.request.user
+
+
+class EditarPerfilView(LoginRequiredMixin, UpdateView):
+    form_class = EditarPerfilForm
+    template_name = 'LeonGames/editarPerfil.html'
+    login_url = '/logIn/'
+
+    def get_object(self):
+        return self.request.user
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.get_object()
+        return kwargs
+
+    def get_success_url(self):
+        return reverse_lazy('editarPerfil')
+
+    def form_valid(self, form):
+        user = self.request.user
+        new_password = form.cleaned_data.get('new_password')
+        if new_password:
+            user.set_password(new_password)
+            user.save()
+        return super().form_valid(form)
+
+
+class DetalleJuegoView(LoginRequiredMixin, DetailView):
+    model = Juego
+    template_name = 'LeonGames/detalleJuego.html'
+    context_object_name = 'juego'
+    login_url = '/logIn/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        juego = self.get_object()
+
+        # Obtener las ventas relacionadas al juego excluyendo las del usuario actual
+        ventas_relacionadas = Venta.objects.filter(Juego=juego).exclude(Vendedor=self.request.user)
+        context['ventas_relacionadas'] = ventas_relacionadas
+
+        # Obtener los comentarios del juego
+        comentarios = Comentarios_juegos.objects.filter(Juego=juego)
+        context['comentarios'] = comentarios
+
+        # Verificar si el usuario ha realizado un pedido y/o un comentario
+        user = self.request.user
+        if user.is_authenticated:
+            pedido_realizado = Pedido.objects.filter(Juego=juego, Comprador=user).exists()
+            comentario_realizado = Comentarios_juegos.objects.filter(Juego=juego, Usuario=user).exists()
+            context['pedido_realizado'] = pedido_realizado
+            context['comentario_realizado'] = comentario_realizado
+
+        # Calcular el precio medio de las ventas del juego
+        precio_medio_ventas = Venta.objects.all().aggregate(precio_medio=Avg('Precio'))
+        context['precio_medio_ventas'] = precio_medio_ventas['precio_medio']
+
+        return context
+
+
+class ComprarVentaView(LoginRequiredMixin, CreateView):
+    model = Pedido
+    fields = []
+    success_url = reverse_lazy('welcome')
+    template_name = "LeonGames/comprarVenta.html"
+    login_url = '/logIn/'
+
+    def form_valid(self, form):
+        form.instance.Fecha = timezone.now().date()
+        form.instance.Comprador = self.request.user
+        venta_id = self.kwargs.get('venta_id')
+        venta = Venta.objects.get(pk=venta_id)
+        form.instance.Vendedor = venta.Vendedor
+        form.instance.Juego = venta.Juego
+        form.instance.Venta_id = venta_id
+        return super().form_valid(form)
+
+
+class CrearComentarioView(LoginRequiredMixin, CreateView):
+    model = Comentarios_juegos
+    form_class = ComentarioForm
+    template_name = 'LeonGames/crearComentario.html'
+    login_url = '/logIn/'
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Obtener el juego relacionado con el comentario
+        context['juego'] = Juego.objects.get(pk=self.kwargs['pk'])
+        return context
+
+    def form_valid(self, form):
+        form.instance.Usuario = self.request.user
+        # Obtener la instancia del juego correspondiente al ID proporcionado
+        juego = get_object_or_404(Juego, pk=self.kwargs['pk'])
+        form.instance.Juego = juego
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        juego_id = self.kwargs['pk']
+        return reverse('detalleJuego', kwargs={'pk': juego_id})
+
+
+
+class EditarComentarioView(LoginRequiredMixin, UpdateView):
+    model = Comentarios_juegos
+    form_class = ComentarioForm
+    template_name = 'LeonGames/editarComentario.html'
+    login_url = '/logIn/'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(Usuario=self.request.user)
+
+    def form_valid(self, form):
+        form.instance.Usuario = self.request.user
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        juego = get_object_or_404(Juego, pk=self.object.Juego.pk)
+        context['juego'] = juego
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('detalleJuego', kwargs={'pk': self.object.Juego.pk})
+
+
+class EliminarComentarioView(LoginRequiredMixin, DeleteView):
+    model = Comentarios_juegos
+    template_name = 'LeonGames/eliminarComentario.html'
+    login_url = '/logIn/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        comentario = self.object
+        context['comentario'] = comentario
+        return context
+
+    def get_success_url(self):
+        juego_pk = self.object.Juego.pk
+        return reverse_lazy('detalleJuego', kwargs={'pk': juego_pk})

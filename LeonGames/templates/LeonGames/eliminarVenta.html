@@ -1,14 +1,33 @@
 {% extends 'LeonGames/base.html' %}
 
 {% block content %}
-  <h1>Eliminar Venta</h1>
-  <p>¿Estás seguro de que quieres eliminar esta venta?</p>
-  <p><strong>Título:</strong> {{ object.Juego.Titulo }}</p>
-  <p><strong>Descripción:</strong> {{ object.DescripcionVenta }}</p>
+    <br><br>
+ <div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="text-center mb-4">Eliminar Venta</h1>
+            <p class="lead">¿Estás seguro de que quieres eliminar esta venta?</p>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Título:</h5>
+                    <p class="card-text">{{ object.Juego.Titulo }}</p>
+                </div>
+            </div>
+            {% if object.DescripcionVenta %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Descripción:</h5>
+                    <p class="card-text">{{ object.DescripcionVenta }}</p>
+                </div>
+            </div>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="confirmar" class="btn btn-danger">Sí, eliminar</button>
+                <a href="{% url 'ventas' %}" class="btn btn-secondary">No, cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
 
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit" name="confirmar" class="btn btn-danger">Sí, eliminar</button>
-    <a href="{% url 'ventas' %}" class="btn btn-secondary">No, cancelar</a>
-  </form>
 {% endblock %}

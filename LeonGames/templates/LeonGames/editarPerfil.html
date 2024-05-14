@@ -1,11 +1,12 @@
 {% extends 'LeonGames/base.html' %}
+
 {% block content %}
     <br><br>
-    <h2>Editar juego</h2>
-
-    <form method="POST">
+<h1>Editar Perfil</h1>
+    <form method="post" action="{% url 'editarPerfil' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary"> Guardar</button>
+
+        <button type="submit">Guardar cambios</button>
     </form>
 {% endblock %}
