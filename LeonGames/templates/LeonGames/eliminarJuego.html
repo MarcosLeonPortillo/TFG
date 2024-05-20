@@ -1,11 +1,20 @@
 {% extends 'LeonGames/base.html' %}
-{% block content %}
-<br><br>
-    <h2> Eliminar Juego </h2>
+{% load static %}
 
-    <form method="post" action="{% url 'eliminarJuego' juego.pk %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger"> SI </button>
+{% block content %}
+    <br><br>
+<div class="card" style="background-color: white; margin: 20px;">
+  <div class="card-header bg-danger text-white">
+    <h2 class="card-title">Eliminar Juego</h2>
+  </div>
+  <div class="card-body">
+    <p>¿Estás seguro de que deseas eliminar este videojuego?</p>
+    <p>Una vez eliminado, no se podrá recuperar.</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Eliminar</button>
+  <a href="{% url 'juegos' %}" class="btn btn-primary">Cancelar</a>
     </form>
-            <a href="{% url 'juegos'  %}" class="btn btn-primary">NO</a>
+  </div>
+</div>
 {% endblock %}

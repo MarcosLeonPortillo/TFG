@@ -2,32 +2,46 @@
 
 {% block content %}
     <br><br>
- <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h1 class="text-center mb-4">Eliminar Venta</h1>
-            <p class="lead">¿Estás seguro de que quieres eliminar esta venta?</p>
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Título:</h5>
-                    <p class="card-text">{{ object.Juego.Titulo }}</p>
+     <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-danger text-white">
+                        <h2 class="card-title">Eliminar Venta</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="lead">¿Estás seguro de que quieres dejar de poner este juego en venta?</p>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Título:</h5>
+                                <p class="card-text">{{ object.Juego.Titulo }}</p>
+                            </div>
+                        </div>
+                        {% if object.DescripcionVenta %}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Descripción:</h5>
+                                <p class="card-text">{{ object.DescripcionVenta }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% if object.Precio %}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Precio:</h5>
+                                <p class="card-text">{{ object.Precio }} €</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" name="confirmar" class="btn btn-danger">Eliminar</button>
+                            <a href="{% url 'ventas' %}" class="btn btn-primary">Cancelar</a>
+                        </form>
+                    </div>
                 </div>
             </div>
-            {% if object.DescripcionVenta %}
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Descripción:</h5>
-                    <p class="card-text">{{ object.DescripcionVenta }}</p>
-                </div>
-            </div>
-            {% endif %}
-            <form method="post">
-                {% csrf_token %}
-                <button type="submit" name="confirmar" class="btn btn-danger">Sí, eliminar</button>
-                <a href="{% url 'ventas' %}" class="btn btn-secondary">No, cancelar</a>
-            </form>
         </div>
     </div>
-</div>
 
 {% endblock %}

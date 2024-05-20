@@ -1,76 +1,44 @@
 {% extends 'LeonGames/base.html' %}
 {% block content %}
     <br><br>
-    <div class="container text-center">
-        <br>
-        <h2>Inicia sesión</h2> <br>
-        <form method="post">
-            {% csrf_token %}
-
-            {{ form.username.label_tag }}
-            {{ form.username }}
-            {% if form.username.errors %}
-                <div class="text-danger">
-                    {{ form.username.errors.as_text }}
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="card shadow-lg p-5">
+                    <h2 class="text-center mb-4">Inicia sesión</h2>
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ form.non_field_errors.as_text }}
+                        </div>
+                    {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="username">Nombre de usuario: </label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="text-danger mt-2">
+                                    {{ form.username.errors.as_text }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    <br>
+                        <div class="form-group">
+                            <label for="password">Contraseña: </label>
+                            {{ form.password }}
+                            {% if form.password.errors %}
+                                <div class="text-danger mt-2">
+                                    {{ form.password.errors.as_text }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    <br>
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success btn-block">Iniciar sesión</button>
+                        </div>
+                    </form>
                 </div>
-            {% endif %}
-            <br><br>
-
-            {{ form.password.label_tag }}
-            {{ form.password }}
-            {% if form.password.errors %}
-                <div class="text-danger">
-                    {{ form.password.errors.as_text }}
-                </div>
-            {% endif %}
-            <br><br>
-
-            {{ form.email.label_tag }}
-            {{ form.email }}
-            {% if form.email.errors %}
-                <div class="text-danger">
-                    {{ form.email.errors.as_text }}
-                </div>
-            {% endif %}
-            <br><br>
-
-            {{ form.password1.label_tag }}
-            {{ form.password1 }}
-            {% if form.password1.errors %}
-                <div class="text-danger">
-                    {{ form.password1.errors.as_text }}
-                </div>
-            {% endif %}
-
-
-            {{ form.password2.label_tag }}
-            {{ form.password2 }}
-            {% if form.password2.errors %}
-                <div class="text-danger">
-                         {{ form.password2.errors.as_text }}
-                </div>
-            {% endif %}
-            <br><br>
-
-            {{ form.first_name.label_tag }}
-            {{ form.first_name }}
-            {% if form.first_name.errors %}
-                <div class="text-danger">
-                    {{ form.first_name.errors.as_text }}
-                </div>
-            {% endif %}
-            <br><br>
-
-            {{ form.last_name.label_tag }}
-            {{ form.last_name }}
-            {% if form.last_name.errors %}
-                <div class="text-danger">
-                    {{ form.last_name.errors.as_text }}
-                </div>
-            {% endif %}
-            <br><br>
-
-            <button type="submit" class="btn btn-primary">Confirmar</button>
-        </form>
+            </div>
+        </div>
     </div>
 {% endblock %}

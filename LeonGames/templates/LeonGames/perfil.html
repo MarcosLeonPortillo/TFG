@@ -1,11 +1,42 @@
 {% extends 'LeonGames/base.html' %}
 {% block content %}
     <br><br>
-<h1>Perfil de Usuario</h1>
-<p>Nombre de usuario: {{ user.username }}</p>
-<p>Correo electrónico: {{ user.email }}</p>
-
-    <p>Nombre: {{ user.first_name }}</p>
-<p>Apellidos: {{ user.last_name }}</p>
-  <a href="{% url 'editarPerfil' %}" class="btn btn-primary btn-lg">Editar Perfil</a>
+ <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h1 class="display-4 text-center mb-4">Perfil de Usuario</h1>
+                        <div class="text-center">
+                            <p><strong>Nombre de usuario:</strong> {{ user.username }}</p>
+                            <p><strong>Correo electrónico:</strong> {{ user.email }}</p>
+                            <p><strong>Nombre:</strong> {{ user.first_name }}</p>
+                            <p><strong>Apellidos:</strong> {{ user.last_name }}</p>
+                            <a href="{% url 'editarPerfil' %}" class="btn btn-primary btn-lg">Editar Perfil</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-4 shadow-sm">
+                    <div class="card-body">
+                        <h2 class="card-title text-center mb-4">Historial de Pedidos</h2>
+                        {% if historial_pedidos %}
+                            <div class="list-group">
+                                {% for pedido in historial_pedidos %}
+                                    <div class="list-group-item">
+                                        <p class="mb-1"><strong>Pedido ID:</strong> {{ pedido.id }}</p>
+                                        <p class="mb-1"><strong>Juego comprado:</strong> {{ pedido.Juego }}</p>
+                                        <p class="mb-1"><strong>Fecha:</strong> {{ pedido.Fecha }}</p>
+                                        <p class="mb-1"><strong>Comprado al usuario:</strong> {{ pedido.Vendedor }}</p>
+                                        <p class="mb-0"><strong>Precio de compra:</strong> {{ pedido.Venta.Precio }} €</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-center">No hay pedidos en el historial.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -87,7 +87,8 @@ class Pedido(models.Model):
     Comprador = models.ForeignKey(User, related_name='comprador_pedidos', on_delete=models.CASCADE)
     Vendedor = models.ForeignKey(User, related_name='vendedor_pedidos', on_delete=models.CASCADE)
     Juego = models.ForeignKey(Juego, on_delete=models.CASCADE)
-    Venta = models.ForeignKey(Venta, null=True, blank=True, on_delete=models.SET_NULL)
+    Precio = models.DecimalField(max_digits=10, decimal_places=2)
+    Consola = models.ForeignKey(Consola, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Pedido ID: {self.id}"

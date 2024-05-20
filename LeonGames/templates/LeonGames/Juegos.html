@@ -1,44 +1,58 @@
 {% extends 'LeonGames/base.html' %}
 {% block content %}
 <br><br>
-    <div class="container mt-4">
-        <h2>Listado de juegos</h2>
-
-        <table class="table table-dark table-bordered mt-4" style="border: 2px solid white; border-radius: 10px;">
-            <thead>
-                <tr style="background-color: indianred; color: white">
-                    <td>Titulo<br>⬇️<br></td>
-                    <td>Genero<br>⬇️<br></td>
-                    <td>Descripción<br>⬇️<br></td>
-                    <td>Lanzamiento<br>⬇️<br></td>
-                    <td>Desarrollador<br>⬇️<br></td>
-                    <td>Marca<br>⬇️<br></td>
-                    <td>Acciones<br>⬇️<br></td>
-                </tr>
-            </thead>
-            <tbody>
-                {% for juego in juegos %}
-                    <tr>
-                        <td>{{ juego.Titulo }}</td>
-                        <td>{{ juego.Genero}}</td>
-                        <td>{{ juego.DescripcionJuego }}</td>
-                        <td>{{ juego.Lanzamiento }}</td>
-                        <td>{{ juego.Desarrollador }}</td>
-                        <td>{{ juego.Marca }}</td>
-
-                        <td>
-                    <a href="{% url 'editarJuego' juego.pk %}" class="btn btn-primary btn-sm">Editar</a>
-                    <a href="{% url 'eliminarJuego' juego.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
-
-                    </td>
-
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <div class="mt-4">
-            <a href="{% url 'nuevoJuego' %}" class="btn btn-success">Nuevo producto</a>
+<section class="section section-lg bg-gradient-primary">
+    <div class="container pt-lg-md">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card bg-secondary shadow border-0">
+                    <div class="card-header bg-transparent">
+                        <div class="text-center">
+                            <h1 class="display-3 text-white">Catálogo de Videojuegos</h1>
+                            <p class="lead text-white">Para los administradores</p>
+                        </div>
+                    </div>
+                    <div class="card-body px-lg-5 py-lg-5">
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover align-items-center">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Título</th>
+                                        <th scope="col">Género</th>
+                                        <th scope="col">Descripción</th>
+                                        <th scope="col">Lanzamiento</th>
+                                        <th scope="col">Desarrollador</th>
+                                        <th scope="col">Marca</th>
+                                        <th scope="col">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for juego in juegos %}
+                                    <tr>
+                                        <td>{{ juego.Titulo }}</td>
+                                        <td>{{ juego.Genero }}</td>
+                                        <td>{{ juego.DescripcionJuego }}</td>
+                                        <td>{{ juego.Lanzamiento }}</td>
+                                        <td>{{ juego.Desarrollador }}</td>
+                                        <td>{{ juego.Marca }}</td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{% url 'editarJuego' juego.pk %}" class="btn btn-outline-info btn-sm">Editar</a>
+                                                <a href="{% url 'eliminarJuego' juego.pk %}" class="btn btn-outline-danger btn-sm">Eliminar</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center mt-5">
+                            <a href="{% url 'nuevoJuego' %}" class="btn btn-success btn-lg">Añadir Nuevo Juego</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</section>
 {% endblock %}

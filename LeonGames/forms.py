@@ -48,13 +48,14 @@ class FormBuscarJuego(forms.Form):
 class PedidoForm(forms.ModelForm):
     class Meta:
         model = Pedido
-        fields = ['Fecha', 'Vendedor', 'Comprador', 'Venta', 'Juego']
+        fields = ['Fecha', 'Vendedor', 'Comprador', 'Juego', 'Precio', 'Consola']
         widgets = {
             'Fecha': forms.HiddenInput(),
             'Vendedor': forms.HiddenInput(),
             'Comprador': forms.HiddenInput(),
-            'Venta': forms.HiddenInput(),
             'Juego': forms.HiddenInput(),
+            'Precio': forms.HiddenInput(),
+            'Consola': forms.HiddenInput(),
         }
 
 
@@ -62,3 +63,7 @@ class ComentarioForm(forms.ModelForm):
     class Meta:
         model = Comentarios_juegos
         fields = ['Texto', 'Valoracion']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['Texto'].widget.attrs['required'] = 'required'

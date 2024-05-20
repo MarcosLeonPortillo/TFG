@@ -1,16 +1,25 @@
 {% extends 'LeonGames/base.html' %}
 {% block content %}
     <br><br>
-    <h1>Poner Videojuego en Venta</h1>
-
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_div }}
-        <br>
-        <button type="submit" class="btn btn-primary">Guardar</button>
-    </form>
-
-
-     <div>  <a href="{% url 'welcome' %}" class="btn btn-secondary">Volver</a>
-     </div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h2 class="mb-0">Añadir juego a la venta</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            {{ form.as_p }}
+                        </div>
+                        <button type="submit" class="btn btn-success">Añadir a la venta</button>
+                        <a href="{% url 'ventas' %}" class="btn btn-secondary">Volver</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

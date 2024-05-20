@@ -1,3 +1,4 @@
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, TemplateView, RedirectView, DetailView, ListView, FormView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.views import LogoutView, LoginView
 import decimal
@@ -209,6 +210,14 @@ class PerfilUsuarioView(LoginRequiredMixin, DetailView):
     def get_object(self, queryset=None):
         return self.request.user
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        # Obtener el historial de pedidos del usuario
+        historial_pedidos = Pedido.objects.filter(Comprador=user)
+        context['historial_pedidos'] = historial_pedidos
+        return context
+
 
 class EditarPerfilView(LoginRequiredMixin, UpdateView):
     form_class = EditarPerfilForm
@@ -224,11 +233,11 @@ class EditarPerfilView(LoginRequiredMixin, UpdateView):
         return kwargs
 
     def get_success_url(self):
-        return reverse_lazy('editarPerfil')
+        return reverse_lazy('perfil')
 
     def form_valid(self, form):
         user = self.request.user
-        new_password = form.cleaned_data.get('new_password')
+        new_password = form.cleaned_data.get('password')  # Cambiado de 'new_password' a 'password'
         if new_password:
             user.set_password(new_password)
             user.save()
@@ -270,20 +279,58 @@ class DetalleJuegoView(LoginRequiredMixin, DetailView):
 
 class ComprarVentaView(LoginRequiredMixin, CreateView):
     model = Pedido
-    fields = []
+    form_class = PedidoForm
     success_url = reverse_lazy('welcome')
     template_name = "LeonGames/comprarVenta.html"
     login_url = '/logIn/'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        venta_id = self.kwargs.get('venta_id')
+        venta = get_object_or_404(Venta, pk=venta_id)
+        context['venta'] = venta
+        context['juego'] = venta.Juego
+        context['precio'] = venta.Precio
+        context['consola'] = venta.Consola
+        return context
+
+    @csrf_exempt
     def form_valid(self, form):
         form.instance.Fecha = timezone.now().date()
         form.instance.Comprador = self.request.user
         venta_id = self.kwargs.get('venta_id')
-        venta = Venta.objects.get(pk=venta_id)
+        venta = get_object_or_404(Venta, pk=venta_id)
         form.instance.Vendedor = venta.Vendedor
         form.instance.Juego = venta.Juego
-        form.instance.Venta_id = venta_id
+        form.instance.Precio = venta.Precio
+        form.instance.Consola = venta.Consola
         return super().form_valid(form)
+
+
+@csrf_exempt
+def procesar_pedido(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        venta_id = data.get('venta_id')
+
+        try:
+            venta = Venta.objects.get(pk=venta_id)
+        except Venta.DoesNotExist:
+            return JsonResponse({'status': 'fail', 'message': 'Venta no encontrada'})
+
+        comprador = request.user
+        Pedido.objects.create(
+            Fecha=timezone.now().date(),
+            Comprador=comprador,
+            Vendedor=venta.Vendedor,
+            Juego=venta.Juego,
+            Precio=venta.Precio,
+            Consola=venta.Consola
+        )
+
+        return JsonResponse({'status': 'success'})
+
+    return JsonResponse({'status': 'fail', 'message': 'Método no permitido'})
 
 
 class CrearComentarioView(LoginRequiredMixin, CreateView):

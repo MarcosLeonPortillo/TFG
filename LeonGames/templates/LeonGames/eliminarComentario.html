@@ -4,16 +4,16 @@
 {% block content %}
     <br><br>
 <div class="card" style="background-color: white; margin: 20px;">
-  <div class="card-header">
-    <h2 class="card-title">Confirmar Eliminación</h2>
+  <div class="card-header bg-danger text-white">
+    <h2 class="card-title">Eliminar Comentario</h2>
   </div>
   <div class="card-body">
     <p>¿Estás seguro de que deseas eliminar este comentario?</p>
-    <p>Una vez eliminado, no podrás recuperarlo.</p>
+    <p>Una vez eliminado, no se podrá recuperar.</p>
     <form method="post">
       {% csrf_token %}
       <button type="submit" class="btn btn-danger">Eliminar</button>
-  <a href="{% url 'detalleJuego' comentario.Juego.pk %}" class="btn btn-secondary">Cancelar</a>
+  <a href="{% url 'detalleJuego' comentario.Juego.pk %}" class="btn btn-primary">Cancelar</a>
     </form>
   </div>
 </div>

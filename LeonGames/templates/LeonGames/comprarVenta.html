@@ -12,17 +12,60 @@
                 <div class="card-body">
                     <!-- Detalles de la venta -->
                     <div class="mb-3">
-                        <p class="fw-bold">Juego: {{ venta.juego }}</p>
-                        <p class="fw-bold">Precio: {{ venta.precio }}</p>
+                        <p class="fw-bold">Juego: {{ venta.Juego }}</p>
+                        <p class="fw-bold">Precio: {{ venta.Precio }}</p>
                         <!-- Agrega más detalles si lo deseas -->
                     </div>
 
-                    <!-- Formulario de compra -->
-                    <form method="post">
-                        {% csrf_token %}
-                        <!-- Puedes agregar campos adicionales aquí si es necesario -->
-                        <button type="submit" class="btn btn-primary">Comprar</button>
-                    </form>
+                    <!-- PAYPAL BUTTONS HERE  -->
+                    <div id="paypal-button-container"></div>
+
+                    <!-- Include the PayPal JavaScript SDK -->
+                    <script src="https://www.paypal.com/sdk/js?client-id=AVJECGq4ijOfR07hZi8Xo39lER2DMpAe5pBzFTEgKjG2Z1vuN8Bp6WWt91JyCNCNOZJkJTyCN63F5kii"></script>
+
+                    <script>
+                        // Render the PayPal button into #paypal-button-container
+                        paypal.Buttons({
+                            // Set up the transaction
+                            createOrder: function (data, actions) {
+                                return actions.order.create({
+                                    purchase_units: [{
+                                        amount: {
+                                            value: '6'
+                                        }
+                                    }]
+                                });
+                            },
+                            // Finalize the transaction
+                            onApprove: function (data, actions) {
+                                return actions.order.capture().then(function (details) {
+                                    // Show a success message to the buyer
+                                    alert('Transaction completed by ' + details.payer.name.given_name + '!');
+
+                                    // Enviar datos al servidor para crear el pedido
+                                    fetch("{% url 'procesarPedido' %}", {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRFToken': '{{ csrf_token }}'
+                                        },
+                                        body: JSON.stringify({
+                                            venta_id: {{ venta.id }}
+                                        })
+                                    }).then(response => response.json()).then(data => {
+                                        if (data.status === 'success') {
+                                            window.location.href = "{% url 'welcome' %}";
+                                        } else {
+                                            alert('Error al procesar el pedido: ' + (data.message || 'Error desconocido'));
+                                        }
+                                    }).catch(error => {
+                                        console.error('Error:', error);
+                                        alert('Error al procesar el pedido');
+                                    });
+                                });
+                            }
+                        }).render('#paypal-button-container');
+                    </script>
                 </div>
             </div>
         </div>

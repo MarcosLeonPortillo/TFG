@@ -2,39 +2,47 @@
 
 {% block content %}
     <br><br>
- <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h1 class="text-center mb-4">Tus juegos puestos en venta</h1>
-            {% if ventas %}
-            <div class="list-group">
-                {% for venta in ventas %}
-                <div class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ venta.Juego.Titulo }}</h5>
-                        <small>{{ venta.Fecha }}</small>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-dark text-white">
+                        <h3 class="mb-0">Tus juegos puestos en venta</h3>
                     </div>
-                    <p class="mb-1">Vendedor: {{ venta.Vendedor.username }}</p>
-                    <p class="mb-1">Precio: {{ venta.Precio }} €</p>
-                    <p class="mb-1">Consola: {{ venta.Consola.Nombre }}</p>
-                    {% if venta.DescripcionVenta %}
-                    <p class="mb-1">Descripción: {{ venta.DescripcionVenta }}</p>
-                    {% endif %}
-                    <div class="btn-group" role="group">
-                        <a href="{% url 'editarVenta' pk=venta.id %}" class="btn btn-primary">Editar venta</a>
-                        <a href="{% url 'eliminarVenta' pk=venta.id %}" class="btn btn-danger">Eliminar venta</a>
+                    <div class="card-body">
+                        {% if ventas %}
+                            <div class="list-group">
+                                {% for venta in ventas %}
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between">
+                                                <h5 class="card-title mb-0">{{ venta.Juego.Titulo }}</h5>
+                                                <small class="text-muted">{{ venta.Fecha }}</small>
+                                            </div><br>
+                                            <p class="card-text">Vendedor: {{ venta.Vendedor.username }}</p>
+                                            <p class="card-text">Precio: {{ venta.Precio }} €</p>
+                                            <p class="card-text">Consola: {{ venta.Consola.Nombre }}</p>
+                                            {% if venta.DescripcionVenta %}
+                                                <p class="card-text">Descripción: {{ venta.DescripcionVenta }}</p>
+                                            {% endif %}
+                                            <div class="btn-group" role="group">
+                                                <a href="{% url 'editarVenta' pk=venta.id %}" class="btn btn-primary">Editar venta</a>
+                                                <a href="{% url 'eliminarVenta' pk=venta.id %}" class="btn btn-danger">Eliminar venta</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-center">Aún no tienes juegos en venta.</p>
+                        {% endif %}
+                        <div class="mt-4">
+                            <a href="{% url 'crearVenta' %}" class="btn btn-success">Poner juego a vender</a>
+                            <a href="{% url 'welcome' %}" class="btn btn-secondary">Volver</a>
+                        </div>
                     </div>
                 </div>
-                {% endfor %}
-            </div>
-            {% else %}
-            <p class="text-center">Aún no tienes juegos en venta.</p>
-            {% endif %}
-            <div class="mt-4">
-                <a href="{% url 'crearVenta' %}" class="btn btn-success">Poner juego a vender</a>
-                <a href="{% url 'welcome' %}" class="btn btn-secondary">Volver</a>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
