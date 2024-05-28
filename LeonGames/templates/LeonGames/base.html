@@ -46,6 +46,11 @@
         .btn-group .btn {
             margin: 0 5px;
         }
+
+        select{
+            margin: 0 5px;
+        }
+
         .custom-select {
     width: auto;
     padding: 0.25rem 0.5rem;
@@ -63,12 +68,7 @@
             </div>
             <div class="col-md-6 text-end">
                 <div class="btn-group me-5">
-<select id="font-selector" class="custom-select">
-    <option value="lobster">Lobster</option>
-    <option value="arial">Arial</option>
-    <option value="times-new-roman">Times New Roman</option>
-    <!-- Agrega más opciones según las fuentes que desees proporcionar -->
-</select>
+
                     {% if user.is_authenticated %}
                         <span class="username">¡Hola, {{ user.username }}!</span>
                         <a href="{% url 'perfil' %}">
@@ -80,7 +80,16 @@
                         <a href="{% url 'login' %}" class="btn btn-success btn-lg">Iniciar sesión</a>
                         <a href="{% url 'registro' %}" class="btn btn-warning btn-lg">Registro</a>
                     {% endif %}
-                    <a href="{% url 'juegos' %}" class="btn btn-primary btn-lg">Juegos</a>
+                    {% if user.is_staff %}
+                        <a href="{% url 'juegos' %}" class="btn btn-primary btn-lg">Juegos</a>
+                    {% endif %}
+
+                <select id="font-selector" class="custom-select">
+    <option value="lobster">Lobster</option>
+    <option value="Roboto">Roboto</option>
+    <option value="times-new-roman">Times New Roman</option>
+    <!-- Agrega más opciones según las fuentes que desees proporcionar -->
+</select>
                 </div>
             </div>
         </div>
@@ -101,8 +110,10 @@
 <!-- Footer -->
 <footer class="footer text-center mt-4">
     <div class="container">
+        <br>
         <p>© 2024 LeonGames. Todos los derechos reservados.</p>
         <p>Desarrollado por Marcos León Portillo</p>
+        <br>
     </div>
 </footer>
 

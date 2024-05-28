@@ -10,6 +10,11 @@
                     <h1 class="display-4 text-center mb-4">Editar Perfil</h1>
                     <form method="post" action="{% url 'editarPerfil' %}">
                         {% csrf_token %}
+                         {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
                         <div class="mb-3">
                             <label for="username" class="form-label">Nombre de usuario:</label>
                             {{ form.username }}
@@ -20,10 +25,10 @@
                             {{ form.email }}
                         </div>
                         <div class="mb-3">
-    <label for="password" class="form-label">Nueva contraseña:</label>
-    {{ form.password }}
-    <div class="form-text">Si desea cambiar la contraseña, rellene este campo.</div>
-</div>
+                            <label for="new_password" class="form-label">Nueva contraseña:</label>
+                            {{ form.new_password }}
+                            <div class="form-text">Si desea cambiar la contraseña, rellene este campo.</div>
+                        </div>
                         <div class="mb-3">
                             <label for="first_name" class="form-label">Nombre:</label>
                             {{ form.first_name }}

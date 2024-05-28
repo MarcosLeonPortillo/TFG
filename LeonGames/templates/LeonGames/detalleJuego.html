@@ -191,7 +191,7 @@
         </div>
     </div>
 
-    <div class="game-details-right">
+  <div class="game-details-right">
         {% if precio_medio_ventas %}
         <div style="margin: 20px; margin-left: 5%; margin-right: 5%;">
             <h3>Precio Medio de las Ventas</h3> <br>
@@ -229,8 +229,22 @@
                 data: data,
                 options: options
             });
+
         </script>
         {% endif %}
+        <!-- Añadir valoración media aquí -->
+        <div style="margin: 20px; margin-left: 5%; margin-right: 5%;"><br><br>
+            <h3>Valoración Media:</h3>
+            {% if valoracion_media_emojis %}
+                <div style="margin-top: 20px;">
+                    <p class="star-rating">{{ valoracion_media_emojis }}</p>
+                </div>
+                 {% else %}
+                <div style="margin-top: 20px;">
+                    <p>No hay valoraciones</p>
+                </div>
+            {% endif %}
+        </div>
     </div>
 </div>
 
@@ -263,10 +277,15 @@
             <p><strong>Valoración:</strong> {{ comentario.get_valoracion }}</p>
             <p><strong>Fecha:</strong> {{ comentario.Fecha }}</p>
         </li>
-        {% if comentario.Usuario == request.user %}
-        <a href="{% url 'editarComentario' comentario.pk %}" class="btn btn-primary">Editar Comentario</a>
-        <a href="{% url 'eliminarComentario' comentario.pk %}" class="btn btn-danger">Eliminar Comentario</a>
-        {% endif %}
+            {% if comentario.Usuario == request.user %}
+            <a href="{% url 'editarComentario' comentario.pk %}" class="btn btn-primary">Editar Comentario</a>
+            {% endif %}
+            {% for group in user.groups.all %}
+             {% if group.name == "moderadores" %}
+                 <a href="{% url 'eliminarComentario' comentario.pk %}" class="btn btn-danger">Eliminar Comentario</a>
+             {% endif %}
+           {% endfor %}
+
         {% endfor %}
     </ul>
     {% else %}
@@ -281,6 +300,7 @@
 </div>
 {% else %}
 <div class="comentarios-container">
+<h3>Añadir comentario y valoraciónv</h3>
     <a href="{% url 'crearComentario' juego.pk %}" class="btn btn-success">Añadir Comentario</a>
 </div>
 {% endif %}

@@ -29,6 +29,12 @@ class EditarPerfilForm(UserChangeForm):
         model = User
         fields = ['username', 'email', 'new_password', 'first_name', 'last_name']
 
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError("El nombre de usuario ya está en uso.")
+        return username
+
 class FormVenta(forms.ModelForm):
     class Meta:
         model = Venta
@@ -40,11 +46,16 @@ class FormVenta(forms.ModelForm):
 
 
 class FormBuscarJuego(forms.Form):
-    texto = forms.CharField(required=False, widget=forms.TextInput())
-    marca = forms.ModelMultipleChoiceField(required=False, queryset=Marca.objects.all(),
-                                           widget=forms.CheckboxSelectMultiple)
-
-
+    texto = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': '🔎 Busca videojuegos...'}),
+        label=''
+    )
+    marca = forms.ModelMultipleChoiceField(
+        required=False,
+        queryset=Marca.objects.all(),
+        widget=forms.CheckboxSelectMultiple
+    )
 class PedidoForm(forms.ModelForm):
     class Meta:
         model = Pedido

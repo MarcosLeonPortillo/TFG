@@ -6,17 +6,17 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-warning text-white">
                     <h2 class="mb-0">Comprar Venta</h2>
                 </div>
                 <div class="card-body">
                     <!-- Detalles de la venta -->
                     <div class="mb-3">
                         <p class="fw-bold">Juego: {{ venta.Juego }}</p>
-                        <p class="fw-bold">Precio: {{ venta.Precio }}</p>
+                        <p class="fw-bold">Precio: {{ precio }}</p>
+                        <p class="fw-bold">Consola: {{ venta.Consola }}</p>
                         <!-- Agrega más detalles si lo deseas -->
                     </div>
-
                     <!-- PAYPAL BUTTONS HERE  -->
                     <div id="paypal-button-container"></div>
 
@@ -24,14 +24,15 @@
                     <script src="https://www.paypal.com/sdk/js?client-id=AVJECGq4ijOfR07hZi8Xo39lER2DMpAe5pBzFTEgKjG2Z1vuN8Bp6WWt91JyCNCNOZJkJTyCN63F5kii"></script>
 
                     <script>
-                        // Render the PayPal button into #paypal-button-container
+                        const precioRaw = "{{ venta.Precio }}";
+                        const precio = precioRaw.replace(',', '.');
                         paypal.Buttons({
                             // Set up the transaction
                             createOrder: function (data, actions) {
                                 return actions.order.create({
                                     purchase_units: [{
                                         amount: {
-                                            value: '6'
+                                            value: precio
                                         }
                                     }]
                                 });

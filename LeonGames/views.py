@@ -52,6 +52,7 @@ class WelcomeView(ListView):
         context['form'] = self.form_class(self.request.GET)
         return context
 
+@method_decorator(staff_member_required, name='dispatch')
 class JuegosView(LoginRequiredMixin, ListView):
         model = Juego
         template_name = 'LeonGames/Juegos.html'
@@ -89,7 +90,7 @@ class EditarJuegoView(LoginRequiredMixin, UpdateView):
         return redirect('juegos')
 
 
-class EliminarJuegoView(LoginRequiredMixin, DeleteView):
+class EliminarJuegoView(LoginRequiredMixin, DeleteView, ):
     model = Juego
     template_name = 'LeonGames/eliminarJuego.html'
     context_object_name = 'juego'
@@ -274,7 +275,34 @@ class DetalleJuegoView(LoginRequiredMixin, DetailView):
         precio_medio_ventas = Venta.objects.all().aggregate(precio_medio=Avg('Precio'))
         context['precio_medio_ventas'] = precio_medio_ventas['precio_medio']
 
+        def valoracion_to_emojis(valoracion):
+            if valoracion == 1:
+                return '⭐'
+            elif valoracion == 2:
+                return '⭐⭐'
+            elif valoracion == 3:
+                return '⭐⭐⭐'
+            elif valoracion == 4:
+                return '⭐⭐⭐⭐'
+            elif valoracion == 5:
+                return '⭐⭐⭐⭐⭐'
+            else:
+                return 'No hay valoraciones'
+
+        valoracion_media = comentarios.aggregate(valoracion_media=Avg('Valoracion'))['valoracion_media']
+        if valoracion_media:
+            valoracion_media_redondeada = round(valoracion_media)
+            context['valoracion_media'] = valoracion_media_redondeada
+            context['valoracion_media_emojis'] = valoracion_to_emojis(valoracion_media_redondeada)
+        else:
+            context['valoracion_media'] = None
+            context['valoracion_media_emojis'] = None
+
         return context
+
+
+
+
 
 
 class ComprarVentaView(LoginRequiredMixin, CreateView):
@@ -383,10 +411,11 @@ class EditarComentarioView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('detalleJuego', kwargs={'pk': self.object.Juego.pk})
 
 
-class EliminarComentarioView(LoginRequiredMixin, DeleteView):
+class EliminarComentarioView(LoginRequiredMixin, DeleteView, PermissionRequiredMixin):
     model = Comentarios_juegos
     template_name = 'LeonGames/eliminarComentario.html'
     login_url = '/logIn/'
+    permission_required = 'LeonGames.can_delete_comentarios_juegos'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -397,3 +426,6 @@ class EliminarComentarioView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         juego_pk = self.object.Juego.pk
         return reverse_lazy('detalleJuego', kwargs={'pk': juego_pk})
+
+    def handle_no_permission(self):
+        return HttpResponseForbidden("No tienes permisos para realizar esta acción.")

@@ -2,19 +2,30 @@
 {% load static %}
 
 {% block content %}
-    <br><br>
+<br><br>
 <div class="card" style="background-color: white; margin: 20px;">
   <div class="card-header bg-danger text-white">
     <h2 class="card-title">Eliminar Comentario</h2>
   </div>
   <div class="card-body">
-    <p>¿Estás seguro de que deseas eliminar este comentario?</p>
-    <p>Una vez eliminado, no se podrá recuperar.</p>
-    <form method="post">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-danger">Eliminar</button>
-  <a href="{% url 'detalleJuego' comentario.Juego.pk %}" class="btn btn-primary">Cancelar</a>
-    </form>
+    {% if user.groups.all|length == 0 %}
+      <p>No puedes eliminar un comentario si no eres moderador.</p>
+    {% else %}
+      {% for group in user.groups.all %}
+        {% if group.name == "moderadores" %}
+          <p>¿Estás seguro de que deseas eliminar este comentario?</p>
+          <p>Una vez eliminado, no se podrá recuperar.</p>
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <a href="{% url 'detalleJuego' comentario.Juego.pk %}" class="btn btn-primary">Cancelar</a>
+          </form>
+        {% endif %}
+      {% endfor %}
+      {% if not user.groups.all %}
+        <p>No puedes eliminar un comentario si no eres moderador.</p>
+      {% endif %}
+    {% endif %}
   </div>
 </div>
 {% endblock %}
