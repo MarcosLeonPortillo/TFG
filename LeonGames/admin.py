@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Venta, Marca, Juego, Comentarios_juegos, Pedido, Pedido_juego, Consola
-
+from .models import (Venta, Marca, Juego, Comentarios_juegos, Pedido, Pedido_juego,
+Consola, Chat)
 # Register your models here.
 
 admin.site.register(Venta)
@@ -10,3 +10,4 @@ admin.site.register(Comentarios_juegos)
 admin.site.register(Pedido)
 admin.site.register(Pedido_juego)
 admin.site.register(Consola)
+admin.site.register(Chat)

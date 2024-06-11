@@ -38,7 +38,7 @@ class EditarPerfilForm(UserChangeForm):
 class FormVenta(forms.ModelForm):
     class Meta:
         model = Venta
-        fields = ['Juego', 'Vendedor', 'Precio', 'Fecha', 'DescripcionVenta', 'Consola']
+        fields = ['Juego', 'Vendedor', 'Precio', 'Fecha', 'DescripcionVenta', 'Consola', 'Imagen']
         widgets = {
             'Vendedor': forms.HiddenInput(),
             'Fecha': forms.HiddenInput(),

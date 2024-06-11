@@ -12,13 +12,12 @@ from django.db.models import Count, Sum, Avg, F
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
-from django.db import transaction
 from django.contrib.auth.views import LogoutView, LoginView
 from django.urls import reverse_lazy, reverse
 from django.forms import formset_factory
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
-from .models import Venta, Marca, Juego, Comentarios_juegos, Pedido, Pedido_juego
+from .models import Venta, Marca, Juego, Comentarios_juegos, Pedido, Pedido_juego, Chat
 from .forms import (FormJuego, FormRegistro, FormBuscarJuego, FormVenta, EditarPerfilForm,
 PedidoForm, ComentarioForm)
 
@@ -303,12 +302,10 @@ class DetalleJuegoView(LoginRequiredMixin, DetailView):
 
 
 
-
-
 class ComprarVentaView(LoginRequiredMixin, CreateView):
     model = Pedido
     form_class = PedidoForm
-    success_url = reverse_lazy('welcome')
+    success_url = reverse_lazy('compraExitosa')
     template_name = "LeonGames/comprarVenta.html"
     login_url = '/logIn/'
 
@@ -332,6 +329,7 @@ class ComprarVentaView(LoginRequiredMixin, CreateView):
         form.instance.Juego = venta.Juego
         form.instance.Precio = venta.Precio
         form.instance.Consola = venta.Consola
+        venta.delete()
         return super().form_valid(form)
 
 
@@ -355,6 +353,7 @@ def procesar_pedido(request):
             Precio=venta.Precio,
             Consola=venta.Consola
         )
+        venta.delete()
 
         return JsonResponse({'status': 'success'})
 
@@ -429,3 +428,19 @@ class EliminarComentarioView(LoginRequiredMixin, DeleteView, PermissionRequiredM
 
     def handle_no_permission(self):
         return HttpResponseForbidden("No tienes permisos para realizar esta acción.")
+
+class compraExitosaView(TemplateView):
+    template_name = 'LeonGames/compraExitosa.html'
+
+
+@login_required
+def chat_view(request):
+    if request.method == 'POST':
+        mensaje = request.POST.get('mensaje')
+        if mensaje:
+            chat = Chat(Usuario=request.user, Mensaje=mensaje, Fecha=timezone.now())
+            chat.save()
+            return JsonResponse({'usuario': request.user.username, 'mensaje': mensaje, 'fecha': chat.Fecha.strftime('%Y-%m-%d %H:%M:%S')})
+
+    chats = Chat.objects.all().order_by('Fecha')
+    return render(request, 'LeonGames/chat.html', {'chats': chats})

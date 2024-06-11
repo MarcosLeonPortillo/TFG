@@ -9,7 +9,7 @@
                     <h2 class="mb-0">Añadir juego a la venta</h2>
                 </div>
                 <div class="card-body">
-                    <form method="POST">
+                    <form method="POST"  enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="mb-3">
                             {{ form.as_p }}

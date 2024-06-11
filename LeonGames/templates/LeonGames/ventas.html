@@ -19,6 +19,9 @@
                                                 <h5 class="card-title mb-0">{{ venta.Juego.Titulo }}</h5>
                                                 <small class="text-muted">{{ venta.Fecha }}</small>
                                             </div><br>
+                                            {% if venta.Imagen %}
+                                                <img src="{{ venta.Imagen.url }}" class="img-fluid rounded mx-auto d-block" alt="Imagen del juego">
+                                            {% endif %}
                                             <p class="card-text">Vendedor: {{ venta.Vendedor.username }}</p>
                                             <p class="card-text">Precio: {{ venta.Precio }} €</p>
                                             <p class="card-text">Consola: {{ venta.Consola.Nombre }}</p>

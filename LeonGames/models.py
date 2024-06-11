@@ -78,6 +78,7 @@ class Venta(models.Model):
     Fecha = models.DateField()
     DescripcionVenta = models.CharField(max_length=255, blank=True, null=True)
     Consola = models.ForeignKey(Consola, on_delete=models.CASCADE)
+    Imagen = models.ImageField(upload_to='media/', blank=True, null=True)
 
     def __str__(self):
         return f"Venta ID: {self.id}"
@@ -101,3 +102,12 @@ class Pedido_juego(models.Model):
 
     def __str__(self):
         return f"Compra ID: {self.id}"
+
+
+class Chat(models.Model):
+    Usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chats')
+    Mensaje = models.TextField()
+    Fecha = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.Usuario.username}: {self.Mensaje}'

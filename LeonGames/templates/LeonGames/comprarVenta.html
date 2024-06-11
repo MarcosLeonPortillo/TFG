@@ -37,13 +37,13 @@
                                     }]
                                 });
                             },
-                            // Finalize the transaction
+
                             onApprove: function (data, actions) {
                                 return actions.order.capture().then(function (details) {
-                                    // Show a success message to the buyer
+
                                     alert('Transaction completed by ' + details.payer.name.given_name + '!');
 
-                                    // Enviar datos al servidor para crear el pedido
+
                                     fetch("{% url 'procesarPedido' %}", {
                                         method: 'POST',
                                         headers: {
@@ -55,7 +55,7 @@
                                         })
                                     }).then(response => response.json()).then(data => {
                                         if (data.status === 'success') {
-                                            window.location.href = "{% url 'welcome' %}";
+                                            window.location.href = "{% url 'compraExitosa' %}";
                                         } else {
                                             alert('Error al procesar el pedido: ' + (data.message || 'Error desconocido'));
                                         }
