@@ -8,14 +8,18 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <style>
+
+
         h3 {
             text-align: center;
             color: #165E13;
+            animation: fadeInUp 1s ease-in-out;
         }
 
         .page-content {
             padding: 0;
             margin: 0;
+            animation: fadeIn 1s ease-in-out;
         }
 
         .carousel {
@@ -41,14 +45,8 @@
             margin-right: 20px;
             overflow: hidden;
             height: auto;
-            padding: 10px;
             transition: transform 0.3s ease;
-        }
-
-        .principal {
-            padding: 30px;
-            border-radius: 15px;
-            overflow-x: hidden;
+            animation: fadeInUp 1s ease-in-out;
         }
 
         .card:hover {
@@ -56,21 +54,10 @@
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
-        .card-img-top {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .card-body {
-            transition: transform 0.3s ease;
-            height: 150px;
-            overflow: hidden;
-        }
-
         .btn-warning {
             background-color: #FFC107;
             border-color: #FFC107;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .btn-warning:hover {
@@ -95,19 +82,22 @@
             font-weight: bold;
             color: #165E13;
             margin-bottom: 10px;
-            white-space: normal;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2em;
+            animation: fadeInUp 1s ease-in-out;
         }
 
         .card-text {
             color: #6c757d;
+            animation: fadeInUp 1s ease-in-out;
         }
 
         .scrolling-wrapper {
             overflow-x: auto;
             white-space: nowrap;
             padding-bottom: 20px;
-            margin-left: 0%;
-            margin-right: 0%;
         }
 
         .scrolling-wrapper img {
@@ -128,6 +118,8 @@
             gap: 8%;
             padding: 10px;
             background-color: #165E13;
+            margin-bottom: 0;
+            animation: fadeInUp 1s ease-in-out;
         }
 
         .icon-row img {
@@ -139,6 +131,7 @@
         hr {
             margin-right: 10%;
             margin-left: 10%;
+            animation: fadeInUp 1s ease-in-out;
         }
 
         @media (max-width: 576px) {
@@ -151,6 +144,68 @@
                 width: 100%;
                 margin-top: 10px;
             }
+        }
+
+        .chatbot-icon {
+            width: 50px;
+            height: 50px;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .ad-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 2px solid #FFC107;
+            background: linear-gradient(45deg, #FFF3CD, #FFF8E1);
+            text-align: left;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 0;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        .ad-container img {
+            width: 30%;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .ad-container:hover img {
+            transform: rotateY(360deg);
+        }
+
+        .ad-text {
+            width: 65%;
+            margin-left: 15px;
+        }
+
+        .ad-text h4 {
+            color: #165E13;
+            margin-top: 0;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        .ad-text p {
+            color: black;
+            font-size: 1em;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        .ad-text .btn {
+            margin-top: 5px;
+            background-color: #28a745;
+            border-color: #28a745;
+            color: white;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .ad-text .btn:hover {
+            background-color: #218838;
+            border-color: #218838;
         }
     </style>
 </head>
@@ -184,6 +239,7 @@
                 <span class="sr-only"></span>
             </a>
         </div>
+
         <div class="icon-row">
             <img src="{% static 'img/estrella.png' %}" alt="Icono">
             <img src="{% static 'img/crash.png' %}" alt="Icono">
@@ -196,13 +252,23 @@
             <img src="{% static 'img/pistola.webp' %}" alt="Icono">
         </div>
 
-        <br><br><br>
-        <h3>Búsqueda de videojuegos</h3>
-        <br>
-        <hr class="mt-3" style="border: 3px solid #165E13;">
-        <br><br>
-        <div class="row justify-content-center">
+       <div class="ad-container">
+    <img src="{% static 'img/gta5.webp' %}" alt="GTA 5 Anuncio">
+    <div class="ad-text">
+        <h4>¡GTA 5 a Precio Bajo!</h4>
+        <p>Descubre las ediciones especiales de GTA 5 a precios increíbles. No te pierdas esta oportunidad de vivir la experiencia definitiva en Los Santos.</p>
+        <p>Sumérgete en el mundo de Los Santos, una ciudad vibrante llena de acción, aventura y desafíos. Con gráficos impresionantes, una narrativa cautivadora y un mundo abierto lleno de posibilidades, GTA 5 ofrece una experiencia de juego inigualable.</p>
+        <p>Además, disfruta de contenido exclusivo, misiones especiales y modos de juego únicos que solo encontrarás en las ediciones especiales. ¡No dejes pasar esta oportunidad única!</p>
+        <a href="{% url 'detalleJuego' 4%}" class="btn btn-warning">Ver Más</a>
+    </div>
+</div>
+</div>
 
+        <br><br>
+        <hr class="mt-3" style="border: 3px solid #165E13;">
+        <br>
+        <h3>Búsqueda de videojuegos</h3><br>
+        <div class="row justify-content-center">
             <div class="col-md-8">
                 <form class="form-inline mb-4" method="GET">
                     {{ form.as_p }}
@@ -210,35 +276,36 @@
                 </form>
             </div>
         </div>
-<br>
+        <br>
         <div class="row justify-content-center">
-
             <div class="col-md-10">
                 <div class="scrolling-wrapper">
                     {% for juego in juegos %}
                     <div class="card">
-                        <br><br>
                         <a href="{% url 'detalleJuego' juego.pk %}">
                             {% if juego.Marca.Nombre == 'Sony' %}
-                            <img src="{% static 'img/sony.png' %}" alt="MarcaJuego" class="card-img-top img-fluid">
+                            <img src="{% static 'img/sonyFondo.jpg' %}" alt="MarcaJuego" class="card-img-top img-fluid">
                             {% elif juego.Marca.Nombre == 'Nintendo' %}
-                            <img src="{% static 'img/nintendo.png' %}" alt="MarcaJuego" class="card-img-top img-fluid">
+                            <img src="{% static 'img/nintendoFondo.webp' %}" alt="MarcaJuego" class="card-img-top img-fluid">
                             {% elif juego.Marca.Nombre == 'Microsoft' %}
-                            <img src="{% static 'img/microsoft.webp' %}" alt="MarcaJuego" class="card-img-top img-fluid">
+                            <img src="{% static 'img/microsoftFondo.jpg' %}" alt="MarcaJuego" class="card-img-top img-fluid">
                             {% else %}
                             <img src="{% static 'img/caratula.png' %}" alt="MarcaJuego" class="card-img-top img-fluid">
                             {% endif %}<br>
-                        </a><br><br>
+                        </a>
                         <div class="card-body">
                             <h5 class="card-title">{{ juego.Titulo }}</h5>
                             <p class="card-text">{{ juego.Marca }}</p>
-                        </div>
+                        </div><br><br><br>
                     </div>
                     {% endfor %}
                 </div>
             </div>
         </div>
     </div>
-<br>
+    <a href="{% url 'chatbot' %}">
+        <img src="{% static 'img/chat.png' %}" class="chatbot-icon" alt="Chatbot">
+    </a>
+    <br>
 </body>
 {% endblock %}

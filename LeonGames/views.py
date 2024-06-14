@@ -21,7 +21,7 @@ from .models import Venta, Marca, Juego, Comentarios_juegos, Pedido, Pedido_jueg
 from .forms import (FormJuego, FormRegistro, FormBuscarJuego, FormVenta, EditarPerfilForm,
 PedidoForm, ComentarioForm)
 
-#Página de bienvenida
+
 class WelcomeView(ListView):
     model = Juego
     context_object_name = 'juegos'
@@ -157,7 +157,6 @@ class VentasView(LoginRequiredMixin, ListView):
     login_url = '/logIn/'
 
     def get_queryset(self):
-        # Filtrar las ventas del usuario logeado
         return Venta.objects.filter(Vendedor=self.request.user)
 
 
@@ -213,7 +212,6 @@ class PerfilUsuarioView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        # Obtener el historial de pedidos del usuario
         historial_pedidos = Pedido.objects.filter(Comprador=user)
         context['historial_pedidos'] = historial_pedidos
         return context
@@ -237,7 +235,7 @@ class EditarPerfilView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         user = self.request.user
-        new_password = form.cleaned_data.get('password')  # Cambiado de 'new_password' a 'password'
+        new_password = form.cleaned_data.get('password')
         if new_password:
             user.set_password(new_password)
             user.save()
@@ -254,15 +252,15 @@ class DetalleJuegoView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         juego = self.get_object()
 
-        # Obtener las ventas relacionadas al juego excluyendo las del usuario actual
+
         ventas_relacionadas = Venta.objects.filter(Juego=juego).exclude(Vendedor=self.request.user)
         context['ventas_relacionadas'] = ventas_relacionadas
 
-        # Obtener los comentarios del juego
+
         comentarios = Comentarios_juegos.objects.filter(Juego=juego)
         context['comentarios'] = comentarios
 
-        # Verificar si el usuario ha realizado un pedido y/o un comentario
+
         user = self.request.user
         if user.is_authenticated:
             pedido_realizado = Pedido.objects.filter(Juego=juego, Comprador=user).exists()
@@ -270,7 +268,7 @@ class DetalleJuegoView(LoginRequiredMixin, DetailView):
             context['pedido_realizado'] = pedido_realizado
             context['comentario_realizado'] = comentario_realizado
 
-        # Calcular el precio medio de las ventas del juego
+
         precio_medio_ventas = Venta.objects.all().aggregate(precio_medio=Avg('Precio'))
         context['precio_medio_ventas'] = precio_medio_ventas['precio_medio']
 
@@ -369,13 +367,11 @@ class CrearComentarioView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Obtener el juego relacionado con el comentario
         context['juego'] = Juego.objects.get(pk=self.kwargs['pk'])
         return context
 
     def form_valid(self, form):
         form.instance.Usuario = self.request.user
-        # Obtener la instancia del juego correspondiente al ID proporcionado
         juego = get_object_or_404(Juego, pk=self.kwargs['pk'])
         form.instance.Juego = juego
         return super().form_valid(form)
@@ -429,18 +425,28 @@ class EliminarComentarioView(LoginRequiredMixin, DeleteView, PermissionRequiredM
     def handle_no_permission(self):
         return HttpResponseForbidden("No tienes permisos para realizar esta acción.")
 
-class compraExitosaView(TemplateView):
+class compraExitosaView(TemplateView, LoginRequiredMixin):
     template_name = 'LeonGames/compraExitosa.html'
+    login_url = '/logIn/'
 
 
-@login_required
-def chat_view(request):
-    if request.method == 'POST':
+
+class chatView(LoginRequiredMixin, View):
+    template_name = 'LeonGames/chat.html'
+    login_url = '/logIn/'
+
+    def get(self, request, *args, **kwargs):
+        chats = Chat.objects.all().order_by('Fecha')
+        return render(request, self.template_name, {'chats': chats})
+
+    def post(self, request, *args, **kwargs):
         mensaje = request.POST.get('mensaje')
         if mensaje:
             chat = Chat(Usuario=request.user, Mensaje=mensaje, Fecha=timezone.now())
             chat.save()
-            return JsonResponse({'usuario': request.user.username, 'mensaje': mensaje, 'fecha': chat.Fecha.strftime('%Y-%m-%d %H:%M:%S')})
-
-    chats = Chat.objects.all().order_by('Fecha')
-    return render(request, 'LeonGames/chat.html', {'chats': chats})
+            return JsonResponse({
+                'usuario': request.user.username,
+                'mensaje': mensaje,
+                'fecha': chat.Fecha.strftime('%Y-%m-%d %H:%M:%S')
+            })
+        return JsonResponse({'error': 'No message provided'}, status=400)

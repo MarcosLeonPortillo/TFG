@@ -4,7 +4,7 @@
 {% block content %}
     <br><br>
 <style>
-    /* Estilos personalizados */
+
     .game-details-container {
         display: flex;
         justify-content: space-between;
@@ -114,11 +114,6 @@
         margin-bottom: 10px;
     }
 
-
-
-
-
-    /* Media queries para dispositivos móviles */
     @media only screen and (max-width: 768px) {
         .game-details-container {
             flex-direction: column;
@@ -153,7 +148,7 @@
     </div>
 
   <div class="game-details-right">
-        <!-- Añadir valoración media aquí -->
+
         <div style="margin: 20px; margin-left: 5%; margin-right: 5%;">
             <h3>Valoración Media:</h3>
             {% if valoracion_media_emojis %}
@@ -198,7 +193,7 @@
     {% endif %}
 </div>
 
-<!-- Sección de comentarios -->
+
 <div class="comentarios-container">
     <h3>Comentarios</h3>
     {% if comentarios %}

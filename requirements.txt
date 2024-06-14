@@ -11,3 +11,4 @@ psycopg2-binary
 #production ready
 # psycopg2s
 Pillow
+dj-database-url

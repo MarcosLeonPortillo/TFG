@@ -1,12 +1,10 @@
 from django.urls import path
 
-from . import views
 from .views import (WelcomeView, JuegosView, AñadirJuegoView, EditarJuegoView,
 EliminarJuegoView, RegistroView, LogInView, LogOutView, CrearVenta, VentasView, EditarVentaView,
 EliminarVentaView, PerfilUsuarioView, EditarPerfilView, DetalleJuegoView, ComprarVentaView,
 CrearComentarioView, EditarComentarioView, EliminarComentarioView, procesar_pedido,
-compraExitosaView)
-from django.contrib import admin
+compraExitosaView, chatView)
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -35,7 +33,7 @@ path('detalleJuego/crearComentario/<int:pk>', CrearComentarioView.as_view(), nam
 path('detalleJuego/editarComentario/<int:pk>/', EditarComentarioView.as_view(), name='editarComentario'),
 path('detalleJuego/eliminarComentario/<int:pk>/', EliminarComentarioView.as_view(), name='eliminarComentario'),
 path('compraExitosa/', compraExitosaView.as_view(), name='compraExitosa'),
-path('chat/', views.chat_view, name='chatbot'),
+path('chat/', chatView.as_view(), name='chatbot'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
